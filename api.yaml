@@ -1,0 +1,520 @@
+openapi: 3.0.3
+info:
+  title: LongRide API
+  description: |
+    Backend API для платформы управления велосипедами LongRide.
+    Бэкенд: Go + Clean Architecture. БД: PostgreSQL (Neon). AI: Groq (llama3-8b-8192).
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:8080/v1
+    description: Локальная разработка
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Access-токен, TTL 15 минут. Получить через /auth/login или /auth/register.
+
+  schemas:
+
+    # ── Auth ──────────────────────────────────────────────────────────────────
+
+    RegisterRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@longride.com
+        password:
+          type: string
+          minLength: 6
+          example: SecurePass123
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT, TTL 15 минут
+        refresh_token:
+          type: string
+          description: JWT, TTL 7 дней
+        user_id:
+          type: string
+          format: uuid
+          description: Только при регистрации
+
+    RefreshRequest:
+      type: object
+      required: [refresh_token]
+      properties:
+        refresh_token:
+          type: string
+
+    RefreshResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+
+    # ── Domain models ─────────────────────────────────────────────────────────
+
+    Bicycle:
+      type: object
+      required: [id, user_id, name, type, total_mileage, is_active, version, created_at, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Генерируется клиентом (crypto.randomUUID / uuid.New())
+        user_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Tsunami SNM100
+        type:
+          type: string
+          example: Fixed Gear
+        total_mileage:
+          type: number
+          format: float
+          example: 2847.5
+        is_active:
+          type: boolean
+        version:
+          type: integer
+          description: Инкрементируется клиентом при каждом изменении
+          example: 3
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          description: Используется для разрешения конфликтов (Server Wins)
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Не null — запись удалена (soft delete). Клиент должен удалить локально.
+
+    Component:
+      type: object
+      required: [id, bike_id, category, name, current_mileage, max_resource_km, status, updated_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Генерируется клиентом
+        bike_id:
+          type: string
+          format: uuid
+        category:
+          type: string
+          enum: [Drivetrain, Brakes, Wheels, Suspension, Other]
+        sub_category:
+          type: string
+          enum: [Chain, Cassette, Chainring, Pads, Rotors, Cables, Tires, Rims, Fork, Shock]
+          nullable: true
+        name:
+          type: string
+          example: Shimano HG701
+        current_mileage:
+          type: number
+          format: float
+          example: 1800
+        max_resource_km:
+          type: number
+          format: float
+          example: 2000
+        status:
+          type: string
+          enum: [Green, Yellow, Red]
+          description: |
+            Green — норма,
+            Yellow — скоро менять (>75% ресурса),
+            Red — критично (>95% ресурса или ручная установка)
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Workshop:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+          example: Bike Pro Service
+        address:
+          type: string
+          example: 123 Main St, City
+        latitude:
+          type: number
+          format: float
+        longitude:
+          type: number
+          format: float
+        distance:
+          type: number
+          format: float
+          description: Расстояние в км
+        rating:
+          type: number
+          format: float
+          example: 4.5
+        phone:
+          type: string
+          example: "+1234567890"
+
+    # ── Sync ──────────────────────────────────────────────────────────────────
+
+    SyncRequest:
+      type: object
+      required: [device_id]
+      properties:
+        device_id:
+          type: string
+          description: Уникальный ID устройства. Генерируется клиентом (crypto.randomUUID), хранится в localStorage.
+          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        bicycles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bicycle'
+          description: Все изменённые велосипеды с момента последней синхронизации. Пустой массив — только получить изменения с сервера.
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+          description: Все изменённые компоненты с момента последней синхронизации.
+        last_sync_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Время последней успешной синхронизации. null — первая синхронизация, сервер вернёт все данные.
+
+    SyncResponse:
+      type: object
+      properties:
+        bicycles:
+          type: array
+          items:
+            $ref: '#/components/schemas/Bicycle'
+          description: |
+            Все велосипеды пользователя, изменённые после last_sync_at.
+            Включает записи с deleted_at != null — клиент должен удалить их локально.
+        components:
+          type: array
+          items:
+            $ref: '#/components/schemas/Component'
+          description: |
+            Все компоненты, изменённые после last_sync_at.
+            Включает soft-deleted записи.
+        synced_at:
+          type: string
+          format: date-time
+          description: Сохранить как новый last_sync_at для следующего запроса.
+
+    # ── AI ────────────────────────────────────────────────────────────────────
+
+    AIConsultRequest:
+      type: object
+      required: [question]
+      properties:
+        question:
+          type: string
+          description: Вопрос о велосипедной механике. Вопросы вне темы отклоняются AI.
+          example: When should I replace my chain?
+
+    AIConsultResponse:
+      type: object
+      properties:
+        answer:
+          type: string
+          description: |
+            Ответ AI с учётом текущего состояния компонентов пользователя.
+            AI автоматически получает контекст о Yellow/Red компонентах из БД.
+
+    # ── Errors ────────────────────────────────────────────────────────────────
+
+    ErrorResponse:
+      type: string
+      description: Текст ошибки в теле ответа (plain text)
+      example: invalid credentials
+
+# ── Paths ─────────────────────────────────────────────────────────────────────
+
+paths:
+
+  /auth/register:
+    post:
+      summary: Регистрация нового пользователя
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '200':
+          description: Успешная регистрация. Токены готовы к использованию.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              example:
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                user_id: 550e8400-e29b-41d4-a716-446655440000
+        '400':
+          description: Невалидный запрос или email уже занят
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      summary: Вход в систему
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Успешный вход
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+              example:
+                access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                refresh_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        '401':
+          description: Неверный email или пароль
+          content:
+            text/plain:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              example: invalid credentials
+
+  /auth/refresh:
+    post:
+      summary: Обновление access-токена
+      description: |
+        Используется автоматически клиентом при получении 401.
+        Фронтенд (lib/api.ts) делает это прозрачно для компонентов.
+      tags: [Auth]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Новый access-токен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshResponse'
+        '401':
+          description: Refresh-токен истёк или невалиден — требуется повторный логин
+
+  /sync:
+    post:
+      summary: Дифференциальная синхронизация
+      description: |
+        Основной эндпоинт офлайн-first архитектуры.
+
+        **Алгоритм (Server Wins):**
+        1. Сервер делает UPSERT данных клиента
+        2. При конфликте: если `server.updated_at > client.updated_at` — серверная версия сохраняется
+        3. Сервер возвращает все изменения с момента `last_sync_at`
+        4. Клиент сохраняет `synced_at` как новый `last_sync_at`
+
+        **Soft delete:** записи с `deleted_at != null` в ответе — клиент должен удалить их локально.
+
+        **Первая синхронизация:** передать `last_sync_at: null` — сервер вернёт все данные пользователя.
+      tags: [Sync]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncRequest'
+            example:
+              device_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+              last_sync_at: "2024-01-15T10:00:00Z"
+              bicycles:
+                - id: 123e4567-e89b-12d3-a456-426614174000
+                  user_id: 550e8400-e29b-41d4-a716-446655440000
+                  name: Tsunami SNM100
+                  type: Fixed Gear
+                  total_mileage: 2847.5
+                  is_active: true
+                  version: 3
+                  created_at: "2024-01-01T00:00:00Z"
+                  updated_at: "2024-01-15T11:00:00Z"
+              components:
+                - id: 223e4567-e89b-12d3-a456-426614174001
+                  bike_id: 123e4567-e89b-12d3-a456-426614174000
+                  category: Drivetrain
+                  sub_category: Chain
+                  name: KMC Z1eHX
+                  current_mileage: 1200
+                  max_resource_km: 2000
+                  status: Yellow
+                  updated_at: "2024-01-15T11:00:00Z"
+      responses:
+        '200':
+          description: Синхронизация выполнена
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncResponse'
+              example:
+                bicycles:
+                  - id: 123e4567-e89b-12d3-a456-426614174000
+                    name: Tsunami SNM100
+                    updated_at: "2024-01-15T11:00:00Z"
+                    deleted_at: null
+                components:
+                  - id: 223e4567-e89b-12d3-a456-426614174001
+                    status: Yellow
+                    current_mileage: 1200
+                    deleted_at: null
+                synced_at: "2024-01-15T11:05:00Z"
+        '401':
+          description: Токен отсутствует или истёк
+        '500':
+          description: Ошибка сервера
+
+  /ai/consult:
+    post:
+      summary: AI-консультация по велосипедной механике
+      description: |
+        Запрос к Groq API (llama3-8b-8192) с двумя защитами:
+
+        **Prompt Guard:** системный промпт запрещает AI отвечать на темы вне велосипедной механики.
+
+        **Динамический контекст:** перед вопросом пользователя сервер автоматически инжектирует
+        текущее состояние компонентов (Yellow/Red статусы) из БД.
+
+        **Rate limit:** 10 запросов в 60 секунд на IP.
+      tags: [AI]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIConsultRequest'
+            example:
+              question: My chain has 1200km. When should I replace it?
+      responses:
+        '200':
+          description: Ответ AI
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIConsultResponse'
+              example:
+                answer: "Based on your current bicycle status, your KMC Z1eHX chain is at 1200/2000 km (WARNING). You have about 800 km left before replacement is needed. I recommend replacing it around 1800 km to avoid cassette wear..."
+        '400':
+          description: Пустой вопрос
+        '401':
+          description: Токен отсутствует или истёк
+        '429':
+          description: Превышен rate limit (10 запросов/мин)
+        '500':
+          description: Ошибка Groq API
+
+  /workshops:
+    get:
+      summary: Ближайшие велосипедные мастерские
+      description: |
+        Возвращает список мастерских рядом с указанными координатами.
+        Фронтенд (map-view.tsx) получает координаты через `navigator.geolocation`.
+        Текущая реализация — mock-данные. Для продакшна заменить на Google Maps / 2GIS API.
+      tags: [Workshops]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: lat
+          in: query
+          required: true
+          description: Широта
+          schema:
+            type: number
+            format: float
+          example: 40.7128
+        - name: lng
+          in: query
+          required: true
+          description: Долгота
+          schema:
+            type: number
+            format: float
+          example: -74.0060
+      responses:
+        '200':
+          description: Список мастерских
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workshop'
+              example:
+                - id: "1"
+                  name: Bike Pro Service
+                  address: 123 Main St, City
+                  latitude: 40.7128
+                  longitude: -74.0060
+                  distance: 1.2
+                  rating: 4.5
+                  phone: "+1234567890"
+        '400':
+          description: Отсутствуют параметры lat или lng
+        '401':
+          description: Токен отсутствует или истёк
+
+  /health:
+    get:
+      summary: Health check
+      description: Проверка работоспособности сервера. Не требует авторизации.
+      tags: [System]
+      responses:
+        '200':
+          description: Сервер работает
+          content:
+            text/plain:
+              example: OK
