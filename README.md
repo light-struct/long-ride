@@ -377,5 +377,5 @@ curl https://api.groq.com/openai/v1/chat/completions \
 
 ## Лицензия
 
-MIT
+github: light-struct
 # LongRide
