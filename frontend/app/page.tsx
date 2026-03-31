@@ -6,6 +6,7 @@ import { AppShell } from "@/components/longride/app-shell"
 import { Dashboard } from "@/components/longride/views/dashboard"
 import { Garage } from "@/components/longride/views/garage"
 import { AIAssistant } from "@/components/longride/views/ai-assistant"
+import { OfflineAvailable } from "@/components/longride/views/offline-available"
 import { Settings } from "@/components/longride/views/settings"
 import { About } from "@/components/longride/views/about"
 
@@ -30,6 +31,7 @@ export default function Home() {
     switch (activeView) {
       case "dashboard": return <Dashboard onNavigate={setActiveView} />
       case "garage":    return <Garage />
+      case "offline":   return <OfflineAvailable />
       case "ai":        return <AIAssistant />
       case "about":     return <About />
       case "settings":  return <Settings onLogout={() => setAuthenticated(false)} />

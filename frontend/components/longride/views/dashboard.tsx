@@ -3,12 +3,13 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { useI18n } from "@/components/i18n/language-provider"
 import {
   Bike,
   MessageCircle,
   ChevronRight,
   Clock,
-  Info,
+  Download,
   Plus,
 } from "lucide-react"
 import {
@@ -30,6 +31,7 @@ interface DashboardProps {
 }
 
 export function Dashboard({ onNavigate }: DashboardProps) {
+  const { t } = useI18n()
   const [bikes, setBikes] = React.useState<BicycleData[]>([])
   const [activeBikeId, setActiveBikeId] = React.useState<string | null>(null)
   const [activity, setActivity] = React.useState(loadActivity())
@@ -52,13 +54,13 @@ export function Dashboard({ onNavigate }: DashboardProps) {
     <div className="space-y-8">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Welcome back</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("dashboard.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("dashboard.subtitle")}</p>
       </div>
 
       {/* Primary Bike Card */}
       <div className="space-y-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Active Bicycle</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{t("dashboard.activeBicycle")}</p>
         {activeBike ? (
           (() => {
             const km = getBikeDistanceKm(activeBike)
@@ -75,8 +77,10 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                       </div>
                       <p className="text-sm text-muted-foreground">{activeBike.type}</p>
                       <p className="mt-3 text-2xl font-semibold tracking-tight">{km.toLocaleString()} km</p>
-                      <p className="text-xs text-muted-foreground">total distance</p>
-                      <p className="mt-4 text-sm text-muted-foreground">{activeBike.components.length} components</p>
+                      <p className="text-xs text-muted-foreground">{t("dashboard.totalDistance")}</p>
+                      <p className="mt-4 text-sm text-muted-foreground">
+                        {t("dashboard.componentsCount", { count: activeBike.components.length })}
+                      </p>
                     </div>
                   </div>
 
@@ -86,7 +90,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                     className="mt-3 h-8 w-full text-xs text-muted-foreground"
                     onClick={() => onNavigate("garage")}
                   >
-                    View full technical state
+                    {t("dashboard.viewTechState")}
                     <ChevronRight className="ml-1 size-3.5" />
                   </Button>
                 </CardContent>
@@ -101,11 +105,11 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                   <Bike className="size-5" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">No bicycles yet</p>
-                  <p className="text-sm text-muted-foreground">Add your first bike to start tracking maintenance.</p>
+                  <p className="font-medium">{t("dashboard.noBikes.title")}</p>
+                  <p className="text-sm text-muted-foreground">{t("dashboard.noBikes.subtitle")}</p>
                   <Button className="mt-4 gap-2" onClick={() => onNavigate("garage")}>
                     <Plus className="size-4" />
-                    Add Bike
+                    {t("dashboard.addBike")}
                   </Button>
                 </div>
               </div>
@@ -116,7 +120,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
       {/* Quick Actions */}
       <div className="space-y-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Quick Actions</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{t("dashboard.quickActions")}</p>
         <div className="grid grid-cols-3 gap-3">
           <Button
             variant="outline"
@@ -124,7 +128,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             onClick={() => onNavigate("garage")}
           >
             <Bike className="size-5" />
-            <span className="text-xs font-medium">Manage Bikes</span>
+            <span className="text-xs font-medium">{t("dashboard.manageBikes")}</span>
           </Button>
           <Button
             variant="outline"
@@ -132,15 +136,15 @@ export function Dashboard({ onNavigate }: DashboardProps) {
             onClick={() => onNavigate("ai")}
           >
             <MessageCircle className="size-5" />
-            <span className="text-xs font-medium">Ask AI Mechanic</span>
+            <span className="text-xs font-medium">{t("dashboard.aiAssistant")}</span>
           </Button>
           <Button
             variant="outline"
             className="h-auto flex-col gap-2 py-4"
-            onClick={() => onNavigate("about")}
+            onClick={() => onNavigate("offline")}
           >
-            <Info className="size-5" />
-            <span className="text-xs font-medium">About Us</span>
+            <Download className="size-5" />
+            <span className="text-xs font-medium">{t("dashboard.offlineAvailable")}</span>
           </Button>
         </div>
       </div>
@@ -148,7 +152,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
       {/* Other Bicycles — horizontal scroll */}
       {otherBikes.length > 0 && (
 	        <div className="space-y-3">
-	          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Other Bicycles</p>
+	          <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{t("dashboard.otherBicycles")}</p>
 	          <div className="flex gap-3 overflow-x-auto pb-1 -mx-6 px-6">
 	            {otherBikes.map((bike) => {
 	              const km = getBikeDistanceKm(bike)
@@ -173,7 +177,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
 
       {/* Recent Activity */}
       <div className="space-y-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Recent Activity</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{t("dashboard.recentActivity")}</p>
         <Card>
           <CardContent className="divide-y py-0">
             {activity.length ? (
@@ -187,7 +191,7 @@ export function Dashboard({ onNavigate }: DashboardProps) {
                 </div>
               ))
             ) : (
-              <div className="p-4 text-sm text-muted-foreground">No activity yet</div>
+              <div className="p-4 text-sm text-muted-foreground">{t("dashboard.noActivity")}</div>
             )}
           </CardContent>
         </Card>

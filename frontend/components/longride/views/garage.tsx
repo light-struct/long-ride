@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { useI18n } from "@/components/i18n/language-provider"
 import {
   Accordion,
   AccordionContent,
@@ -70,6 +71,7 @@ interface BikeFormDialogProps {
 }
 
 function BikeFormDialog({ open, onClose, initial, onSave, title }: BikeFormDialogProps) {
+  const { t } = useI18n()
   const [name, setName] = React.useState(initial?.name ?? "")
   const [type, setType] = React.useState(initial?.type ?? "")
 
@@ -83,21 +85,21 @@ function BikeFormDialog({ open, onClose, initial, onSave, title }: BikeFormDialo
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>Fill in the details for your bicycle.</DialogDescription>
+          <DialogDescription>{t("garage.dialog.bikeDetails")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 pt-1">
           <div className="space-y-1.5">
-            <Label>Name</Label>
-            <Input placeholder="e.g. Tsunami SNM100" value={name} onChange={(e) => setName(e.target.value)} />
+            <Label>{t("garage.field.name")}</Label>
+            <Input placeholder={t("garage.placeholder.bikeName")} value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-1.5">
-            <Label>Type</Label>
-            <Input placeholder="e.g. Fixed Gear" value={type} onChange={(e) => setType(e.target.value)} />
+            <Label>{t("garage.field.type")}</Label>
+            <Input placeholder={t("garage.placeholder.bikeType")} value={type} onChange={(e) => setType(e.target.value)} />
           </div>
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={() => { onSave(name, type); onClose() }} disabled={!name.trim()}>Save</Button>
+          <Button variant="outline" onClick={onClose}>{t("common.cancel")}</Button>
+          <Button onClick={() => { onSave(name, type); onClose() }} disabled={!name.trim()}>{t("common.save")}</Button>
         </div>
       </DialogContent>
     </Dialog>
@@ -114,6 +116,7 @@ interface ComponentFormDialogProps {
 }
 
 function ComponentFormDialog({ open, onClose, fixedCategory, initial, onSave, title }: ComponentFormDialogProps) {
+  const { t } = useI18n()
   const [name, setName]         = React.useState(initial?.name ?? "")
   const [category, setCategory] = React.useState<Category>(fixedCategory ?? initial?.category ?? "Drivetrain")
   const [mileage, setMileage]   = React.useState(String(initial?.mileage ?? "0"))
@@ -129,34 +132,34 @@ function ComponentFormDialog({ open, onClose, fixedCategory, initial, onSave, ti
       <DialogContent className="max-w-sm">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>Fill in the details for this component.</DialogDescription>
+          <DialogDescription>{t("garage.dialog.compDetails")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-4 pt-1">
           {!fixedCategory && (
             <div className="space-y-1.5">
-              <Label>Category</Label>
+              <Label>{t("garage.field.category")}</Label>
               <Select value={category} onValueChange={(v) => setCategory(v as Category)}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Drivetrain">Drivetrain</SelectItem>
-                  <SelectItem value="Brakes">Brakes</SelectItem>
-                  <SelectItem value="Other">Other</SelectItem>
+                  <SelectItem value="Drivetrain">{t("category.Drivetrain")}</SelectItem>
+                  <SelectItem value="Brakes">{t("category.Brakes")}</SelectItem>
+                  <SelectItem value="Other">{t("category.Other")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           )}
           <div className="space-y-1.5">
-            <Label>Component Name</Label>
-            <Input placeholder="e.g. KMC Z1eHX Chain" value={name} onChange={(e) => setName(e.target.value)} />
+            <Label>{t("garage.field.componentName")}</Label>
+            <Input placeholder={t("garage.placeholder.componentName")} value={name} onChange={(e) => setName(e.target.value)} />
           </div>
           <div className="space-y-1.5">
-            <Label>Current Mileage (km)</Label>
+            <Label>{t("garage.field.currentMileage")}</Label>
             <Input type="number" min="0" placeholder="0" value={mileage} onChange={(e) => setMileage(e.target.value)} />
           </div>
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
-          <Button onClick={() => { onSave(name, category, Number(mileage)); onClose() }} disabled={!name.trim()}>Save</Button>
+          <Button variant="outline" onClick={onClose}>{t("common.cancel")}</Button>
+          <Button onClick={() => { onSave(name, category, Number(mileage)); onClose() }} disabled={!name.trim()}>{t("common.save")}</Button>
         </div>
       </DialogContent>
     </Dialog>
@@ -170,18 +173,19 @@ interface MileageDialogProps {
 }
 
 function MileageDialog({ open, onClose, onSave }: MileageDialogProps) {
+  const { t } = useI18n()
   const [value, setValue] = React.useState("")
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Add Mileage</DialogTitle>
-          <DialogDescription>Add kilometers to all components of this bicycle.</DialogDescription>
+          <DialogTitle>{t("garage.dialog.addMileage")}</DialogTitle>
+          <DialogDescription>{t("garage.dialog.addMileageDesc")}</DialogDescription>
         </DialogHeader>
         <div className="space-y-3 pt-1">
           <div className="space-y-1.5">
-            <Label>Distance (km)</Label>
+            <Label>{t("garage.field.distance")}</Label>
             <Input
               type="number"
               min="0"
@@ -192,7 +196,7 @@ function MileageDialog({ open, onClose, onSave }: MileageDialogProps) {
           </div>
         </div>
         <div className="flex justify-end gap-2 pt-2">
-          <Button variant="outline" onClick={onClose}>Cancel</Button>
+          <Button variant="outline" onClick={onClose}>{t("common.cancel")}</Button>
           <Button
             onClick={() => {
               onSave(Number(value) || 0)
@@ -201,7 +205,7 @@ function MileageDialog({ open, onClose, onSave }: MileageDialogProps) {
             }}
             disabled={!value || Number(value) <= 0}
           >
-            Save
+            {t("common.save")}
           </Button>
         </div>
       </DialogContent>
@@ -217,18 +221,19 @@ interface DeleteDialogProps {
 }
 
 function DeleteDialog({ open, onClose, label, onConfirm }: DeleteDialogProps) {
+  const { t } = useI18n()
   return (
     <AlertDialog open={open} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete {label}?</AlertDialogTitle>
-          <AlertDialogDescription>This action cannot be undone.</AlertDialogDescription>
+          <AlertDialogTitle>{t("garage.deleteConfirm.title", { label })}</AlertDialogTitle>
+          <AlertDialogDescription>{t("garage.deleteConfirm.desc")}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
           <AlertDialogAction className="bg-destructive text-white hover:bg-destructive/90"
             onClick={() => { onConfirm(); onClose() }}>
-            Delete
+            {t("common.delete")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -239,6 +244,7 @@ function DeleteDialog({ open, onClose, label, onConfirm }: DeleteDialogProps) {
 /* ─── Main Component ─────────────────────────────────────────────────────── */
 
 export function Garage() {
+  const { t } = useI18n()
   const [bikes, setBikes] = React.useState<BicycleData[]>([])
   const [selectedId, setSelectedId] = React.useState<string | null>(null)
   const [hydrated, setHydrated] = React.useState(false)
@@ -368,12 +374,12 @@ export function Garage() {
         <>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-semibold tracking-tight">Garage</h1>
-              <p className="text-sm text-muted-foreground">Your bicycles</p>
+              <h1 className="text-2xl font-semibold tracking-tight">{t("garage.title")}</h1>
+              <p className="text-sm text-muted-foreground">{t("garage.subtitle")}</p>
             </div>
             <Button size="sm" variant="outline" className="gap-2" onClick={() => setAddBikeOpen(true)}>
               <Plus className="size-4" />
-              Add Bike
+              {t("garage.addBike")}
             </Button>
           </div>
 
@@ -394,7 +400,9 @@ export function Garage() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="truncate font-medium">{bike.name}</p>
-                      <p className="text-sm text-muted-foreground">{bike.type} · {bike.components.length} components</p>
+                      <p className="text-sm text-muted-foreground">
+                        {bike.type} · {t("garage.components", { count: bike.components.length })}
+                      </p>
                     </div>
                     <ChevronRight className="size-5 shrink-0 text-muted-foreground" />
                   </CardContent>
@@ -422,15 +430,15 @@ export function Garage() {
             <div className="flex flex-wrap gap-2">
               <Button size="sm" variant="outline" className="gap-2" onClick={() => setMileageOpen(true)}>
                 <Gauge className="size-4" />
-                Update Mileage
+                {t("garage.updateMileage")}
               </Button>
               <Button size="sm" variant="outline" className="gap-2" onClick={() => setEditBikeOpen(true)}>
                 <Pencil className="size-4" />
-                Edit Bike
+                {t("garage.editBike")}
               </Button>
               <Button size="sm" variant="outline" className="gap-2 text-destructive hover:text-destructive" onClick={() => setDeleteBikeOpen(true)}>
                 <Trash2 className="size-4" />
-                Delete
+                {t("garage.deleteBike")}
               </Button>
             </div>
 
@@ -438,11 +446,12 @@ export function Garage() {
             <Accordion type="multiple" className="space-y-2">
               {categories.map((cat) => {
                 const comps = selectedBike.components.filter((c) => c.category === cat)
+                const catLabel = t(`category.${cat}`)
                 return (
                   <AccordionItem key={cat} value={cat} className="rounded-lg border px-4 last:border-b">
                     <AccordionTrigger className="hover:no-underline">
                       <div className="flex items-center gap-3">
-                        <span className="font-medium">{cat}</span>
+                        <span className="font-medium">{catLabel}</span>
                         <span className="text-sm text-muted-foreground">({comps.length})</span>
                       </div>
                     </AccordionTrigger>
@@ -469,7 +478,7 @@ export function Garage() {
                         <Button variant="outline" size="sm" className="mt-1 w-full gap-2"
                           onClick={() => setAddCompCategory(cat)}>
                           <Plus className="size-4" />
-                          Add Component
+                          {t("garage.addComponent")}
                         </Button>
                       </div>
                     </AccordionContent>
@@ -487,7 +496,7 @@ export function Garage() {
         open={addBikeOpen}
         onClose={() => setAddBikeOpen(false)}
         onSave={handleAddBike}
-        title="Add Bicycle"
+        title={t("garage.dialog.addBicycle")}
       />
 
       {selectedBike && (
@@ -496,7 +505,7 @@ export function Garage() {
           onClose={() => setEditBikeOpen(false)}
           initial={{ name: selectedBike.name, type: selectedBike.type }}
           onSave={handleEditBike}
-          title="Edit Bicycle"
+          title={t("garage.dialog.editBicycle")}
         />
       )}
 
@@ -512,7 +521,7 @@ export function Garage() {
         onClose={() => setAddCompCategory(null)}
         fixedCategory={addCompCategory ?? undefined}
         onSave={handleAddComponent}
-        title="Add Component"
+        title={t("garage.dialog.addComponent")}
       />
 
       {editComp && (
@@ -521,7 +530,7 @@ export function Garage() {
           onClose={() => setEditComp(null)}
           initial={{ name: editComp.name, category: editComp.category, mileage: editComp.mileage }}
           onSave={handleEditComponent}
-          title="Edit Component"
+          title={t("garage.dialog.editComponent")}
         />
       )}
 

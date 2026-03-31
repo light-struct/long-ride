@@ -1,0 +1,108 @@
+{
+  "title": { "ru": "Питание", "en": "Nutrition Tips" },
+  "description": { "ru": "Простые офлайн-советы по питанию для долгих поездок.", "en": "Simple offline nutrition guidance for long rides." },
+  "categories": [
+    {
+      "id": "before",
+      "name": { "ru": "Перед поездкой", "en": "Before the Ride" },
+      "topics": [
+        {
+          "id": "pre-ride-meal",
+          "title": { "ru": "Еда перед поездкой (за 2–3 часа)", "en": "Pre-ride Meal (2 to 3 hours before)" },
+          "summary": { "ru": "Стартуйте сытым без проблем с желудком.", "en": "Start fueled without stomach issues." },
+          "badges": ["Beginner"],
+          "sections": [
+            {
+              "heading": { "ru": "На что ориентироваться", "en": "What to aim for" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Больше углеводов, умеренно белка, минимум жиров и клетчатки.", "en": "Mostly carbs, moderate protein, low fat and low fiber." },
+                { "ru": "Пейте воду заранее; не экспериментируйте с новой едой в день важной поездки.", "en": "Drink water regularly; avoid trying brand new foods." }
+              ]
+            },
+            {
+              "heading": { "ru": "Примеры", "en": "Examples" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Овсянка + банан + йогурт.", "en": "Oatmeal + banana + yogurt." },
+                { "ru": "Рис + яйца.", "en": "Rice + eggs." },
+                { "ru": "Тост + джем + небольшая порция сыра.", "en": "Toast + jam + a small portion of cheese." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "during",
+      "name": { "ru": "Во время поездки", "en": "During the Ride" },
+      "topics": [
+        {
+          "id": "carbs-per-hour",
+          "title": { "ru": "Питание в час", "en": "Fueling per Hour" },
+          "summary": { "ru": "Не ловите «стенку»: ешьте рано и регулярно.", "en": "Avoid bonking by eating early and consistently." },
+          "badges": ["Beginner"],
+          "sections": [
+            {
+              "heading": { "ru": "Рекомендации", "en": "Guidelines" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Для поездок 90+ минут начинайте питание в первые 30–45 минут.", "en": "For rides 90+ minutes, start fueling within the first 30 to 45 minutes." },
+                { "ru": "Лучше понемногу каждый час, чем редко и много.", "en": "Target a steady intake each hour instead of big, infrequent snacks." },
+                { "ru": "Берите простые варианты: бананы, батончики, гели, сэндвичи или изотоник.", "en": "Carry easy options: bananas, bars, gels, sandwiches, or sports drink." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "hydration",
+          "title": { "ru": "Вода и электролиты", "en": "Hydration and Electrolytes" },
+          "summary": { "ru": "Подбирайте объем жидкости под жару и потоотделение.", "en": "Match fluids to heat and sweat rate." },
+          "badges": ["Beginner"],
+          "sections": [
+            {
+              "heading": { "ru": "Чек-лист", "en": "Checklist" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Пейте маленькими глотками регулярно, особенно в жару и ветер.", "en": "Sip regularly, especially in heat and wind." },
+                { "ru": "Если сильно потеете, добавляйте электролиты (соль) в воду.", "en": "If you sweat a lot, use electrolytes (salt) with water." },
+                { "ru": "Если после поездки моча темная, в следующий раз увеличьте потребление жидкости.", "en": "If urine is dark after the ride, increase fluids next time." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "after",
+      "name": { "ru": "После поездки", "en": "After the Ride" },
+      "topics": [
+        {
+          "id": "recovery-window",
+          "title": { "ru": "Восстановление (в течение 1 часа)", "en": "Recovery Meal (within 1 hour)" },
+          "summary": { "ru": "Помогите восстановлению после длинной или тяжелой поездки.", "en": "Support recovery after long or hard rides." },
+          "badges": ["Beginner"],
+          "sections": [
+            {
+              "heading": { "ru": "Что включить", "en": "What to include" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Углеводы для восполнения гликогена и белок для восстановления мышц.", "en": "Carbs to replenish glycogen and protein to support muscle repair." },
+                { "ru": "Восполните жидкость водой; в жару полезны электролиты.", "en": "Rehydrate with water, and consider electrolytes if it was hot." }
+              ]
+            },
+            {
+              "heading": { "ru": "Примеры", "en": "Examples" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Рис или паста + курица.", "en": "Rice or pasta + chicken." },
+                { "ru": "Сэндвич + фрукты.", "en": "Sandwich + fruit." },
+                { "ru": "Молоко или йогурт + хлопья.", "en": "Milk or yogurt + cereal." }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,109 @@
+{
+  "title": { "ru": "Тренировки", "en": "Training Tips" },
+  "description": { "ru": "Офлайн-идеи тренировок для дальних поездок.", "en": "Offline training ideas for endurance rides." },
+  "categories": [
+    {
+      "id": "endurance",
+      "name": { "ru": "Выносливость", "en": "Endurance" },
+      "topics": [
+        {
+          "id": "base-ride",
+          "title": { "ru": "База (Зона 2)", "en": "Base Ride (Zone 2)" },
+          "summary": { "ru": "Развивайте аэробную выносливость ровной, «разговорной» нагрузкой.", "en": "Build aerobic capacity with steady, conversational effort." },
+          "badges": ["Beginner"],
+          "sections": [
+            {
+              "heading": { "ru": "Как выполнять", "en": "How to do it" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Едьте 60–120 минут в легком темпе, чтобы можно было говорить полными предложениями.", "en": "Ride 60 to 120 minutes at an easy pace where you can speak in full sentences." },
+                { "ru": "Держите комфортный каденс (обычно 80–95 об/мин).", "en": "Keep cadence comfortable (typically 80 to 95 rpm)." },
+                { "ru": "Избегайте рывков в подъемах: переключайтесь заранее и держите ровную нагрузку.", "en": "Avoid surges on climbs: shift early and keep effort steady." }
+              ]
+            },
+            {
+              "heading": { "ru": "Прогрессия", "en": "Progression" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Добавляйте 10–15 минут в неделю, пока 2 часа не станут комфортными.", "en": "Add 10 to 15 minutes per week until you can hold 2 hours comfortably." },
+                { "ru": "Если накапливается усталость, сделайте облегчённую неделю: минус 30–40% объема.", "en": "If fatigue accumulates, cut volume by 30 to 40% for one easy week." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "long-ride-structure",
+          "title": { "ru": "Структура длинной поездки", "en": "Long Ride Structure" },
+          "summary": { "ru": "Делайте длинные поездки полезными без перегруза.", "en": "Make long rides productive without burning out." },
+          "badges": ["Intermediate"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаблон", "en": "Template" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Первые 30 минут: очень легкая разминка.", "en": "First 30 minutes: very easy warm-up." },
+                { "ru": "Середина: ровная выносливость, с короткими паузами по необходимости.", "en": "Middle: steady endurance effort with short breaks as needed." },
+                { "ru": "Последние 20 минут: сбавьте темп и сосредоточьтесь на ровном педалировании.", "en": "Last 20 minutes: keep it easy; focus on smooth pedaling." }
+              ]
+            },
+            {
+              "heading": { "ru": "Восстановление", "en": "Recovery" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Запланируйте легкий день после длинной поездки.", "en": "Plan an easy day after the long ride." },
+                { "ru": "Если ноги «тяжелые» более 48 часов, снизьте интенсивность следующей тренировки.", "en": "If legs feel heavy for 48+ hours, reduce intensity for the next session." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "strength",
+      "name": { "ru": "Силовая и стабилизация", "en": "Strength and Stability" },
+      "topics": [
+        {
+          "id": "core-stability",
+          "title": { "ru": "Стабилизация кора (10 минут)", "en": "Core Stability (10 minutes)" },
+          "summary": { "ru": "Улучшите посадку и снизьте усталость на длинных поездках.", "en": "Improve posture and reduce fatigue on long rides." },
+          "badges": ["Beginner"],
+          "sections": [
+            {
+              "heading": { "ru": "Комплекс", "en": "Circuit" },
+              "kind": "ul",
+              "items": [
+                { "ru": "Планка: 3 x 30–45 секунд.", "en": "Plank: 3 x 30 to 45 seconds." },
+                { "ru": "Боковая планка: 2 x 20–30 секунд на сторону.", "en": "Side plank: 2 x 20 to 30 seconds each side." },
+                { "ru": "Ягодичный мост: 3 x 10–15 повторений.", "en": "Glute bridge: 3 x 10 to 15 reps." },
+                { "ru": "Bird-dog: 2 x 8 повторений на сторону.", "en": "Bird-dog: 2 x 8 reps each side." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "recovery",
+      "name": { "ru": "Восстановление", "en": "Recovery" },
+      "topics": [
+        {
+          "id": "easy-spin",
+          "title": { "ru": "Легкая раскатка", "en": "Easy Spin Day" },
+          "summary": { "ru": "Улучшить кровообращение и ускорить восстановление.", "en": "Increase blood flow and speed up recovery." },
+          "badges": ["Beginner"],
+          "sections": [
+            {
+              "heading": { "ru": "Правила", "en": "Guidelines" },
+              "kind": "ul",
+              "items": [
+                { "ru": "20–45 минут очень легко, с минимальным сопротивлением.", "en": "20 to 45 minutes very easy, low resistance." },
+                { "ru": "Держите легкий и ровный каденс; остановитесь, если боль усиливается.", "en": "Keep cadence light and smooth; stop if pain increases." },
+                { "ru": "Заканчивайте с ощущением, что стало легче, чем в начале.", "en": "Finish feeling better than you started." }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

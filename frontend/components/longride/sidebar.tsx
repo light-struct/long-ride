@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import { useI18n } from "@/components/i18n/language-provider"
 import {
   Home,
   Bike,
@@ -10,6 +11,7 @@ import {
   Menu,
   X,
   Info,
+  Download,
 } from "lucide-react"
 
 interface SidebarProps {
@@ -20,17 +22,19 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { id: "dashboard", label: "Dashboard", icon: Home },
-  { id: "garage",    label: "Garage",    icon: Bike },
-  { id: "ai",        label: "AI Mechanic", icon: MessageCircle },
-  { id: "about",     label: "About Us", icon: Info },
-]
+  { id: "dashboard", labelKey: "nav.dashboard", icon: Home },
+  { id: "garage",    labelKey: "nav.garage",    icon: Bike },
+  { id: "offline",   labelKey: "nav.offline",   icon: Download },
+  { id: "ai",        labelKey: "nav.ai",        icon: MessageCircle },
+  { id: "about",     labelKey: "nav.about",     icon: Info },
+] as const
 
 const bottomItems = [
-  { id: "settings", label: "Settings", icon: Settings },
-]
+  { id: "settings", labelKey: "nav.settings", icon: Settings },
+] as const
 
 export function Sidebar({ isOpen, onToggle, activeView, onNavigate }: SidebarProps) {
+  const { t } = useI18n()
   return (
     <aside
       className={cn(
@@ -67,7 +71,7 @@ export function Sidebar({ isOpen, onToggle, activeView, onNavigate }: SidebarPro
               onClick={() => onNavigate(item.id)}
             >
               <Icon className="size-5 shrink-0" />
-              {isOpen && <span>{item.label}</span>}
+              {isOpen && <span>{t(item.labelKey)}</span>}
             </Button>
           )
         })}
@@ -86,7 +90,7 @@ export function Sidebar({ isOpen, onToggle, activeView, onNavigate }: SidebarPro
               onClick={() => onNavigate(item.id)}
             >
               <Icon className="size-5 shrink-0" />
-              {isOpen && <span>{item.label}</span>}
+              {isOpen && <span>{t(item.labelKey)}</span>}
             </Button>
           )
         })}

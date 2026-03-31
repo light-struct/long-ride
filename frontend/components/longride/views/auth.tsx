@@ -4,6 +4,9 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { apiLogin, apiRegister, tokenStore } from "@/lib/api"
+import { useI18n } from "@/components/i18n/language-provider"
+import type { Lang } from "@/lib/i18n/types"
+import { cn } from "@/lib/utils"
 
 type AuthMode = "login" | "register" | "forgot"
 
@@ -12,6 +15,7 @@ interface AuthProps {
 }
 
 export function Auth({ onAuthenticated }: AuthProps) {
+  const { lang, setLang, t } = useI18n()
   const [mode, setMode] = React.useState<AuthMode>("login")
   const [email, setEmail] = React.useState("")
   const [password, setPassword] = React.useState("")
@@ -30,7 +34,7 @@ export function Auth({ onAuthenticated }: AuthProps) {
     }
 
     if (mode === "register" && password !== confirmPassword) {
-      setError("Passwords do not match")
+      setError(t("auth.err.passwordsMismatch"))
       return
     }
 
@@ -48,7 +52,7 @@ export function Auth({ onAuthenticated }: AuthProps) {
       onAuthenticated()
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : "Authentication failed"
-      setError(msg.includes("duplicate") ? "Email already registered" : "Invalid email or password")
+      setError(msg.includes("duplicate") ? t("auth.err.emailRegistered") : t("auth.err.invalidCreds"))
     } finally {
       setLoading(false)
     }
@@ -59,25 +63,42 @@ export function Auth({ onAuthenticated }: AuthProps) {
       <div className="w-full max-w-sm space-y-10">
         {/* Brand */}
         <div className="space-y-1">
-          <h1 className="text-3xl font-semibold tracking-tight">LongRide</h1>
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="text-3xl font-semibold tracking-tight">LongRide</h1>
+            <div className="flex rounded-md border bg-card p-1">
+              {(["ru", "en"] as Lang[]).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  className={cn(
+                    "px-2 py-1 text-xs font-medium rounded",
+                    lang === l ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground"
+                  )}
+                  onClick={() => setLang(l)}
+                >
+                  {l.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
           <p className="text-sm text-muted-foreground">
-            {mode === "login" && "Sign in to your account"}
-            {mode === "register" && "Create your account"}
-            {mode === "forgot" && "Reset your password"}
+            {mode === "login" && t("auth.signinSubtitle")}
+            {mode === "register" && t("auth.registerSubtitle")}
+            {mode === "forgot" && t("auth.forgotSubtitle")}
           </p>
         </div>
 
         {mode === "forgot" && forgotSent ? (
           <div className="space-y-6">
             <div className="rounded-lg border bg-secondary/40 px-4 py-5 text-sm leading-relaxed">
-              A reset link has been sent to <span className="font-medium">{email}</span>. Check your inbox.
+              {t("auth.resetSent", { email })}
             </div>
             <button
               type="button"
               className="text-sm text-muted-foreground underline-offset-4 hover:underline"
               onClick={() => { setMode("login"); setForgotSent(false) }}
             >
-              Back to login
+              {t("auth.backToLogin")}
             </button>
           </div>
         ) : (
@@ -85,7 +106,7 @@ export function Auth({ onAuthenticated }: AuthProps) {
             <div className="space-y-3">
               <Input
                 type="email"
-                placeholder="Email"
+                placeholder={t("auth.email")}
                 autoComplete="email"
                 required
                 value={email}
@@ -94,7 +115,7 @@ export function Auth({ onAuthenticated }: AuthProps) {
               {mode !== "forgot" && (
                 <Input
                   type="password"
-                  placeholder="Password"
+                  placeholder={t("auth.password")}
                   autoComplete={mode === "register" ? "new-password" : "current-password"}
                   required
                   value={password}
@@ -104,7 +125,7 @@ export function Auth({ onAuthenticated }: AuthProps) {
               {mode === "register" && (
                 <Input
                   type="password"
-                  placeholder="Confirm password"
+                  placeholder={t("auth.confirmPassword")}
                   autoComplete="new-password"
                   required
                   value={confirmPassword}
@@ -124,13 +145,19 @@ export function Auth({ onAuthenticated }: AuthProps) {
                   className="text-xs text-muted-foreground underline-offset-4 hover:underline"
                   onClick={() => setMode("forgot")}
                 >
-                  Forgot password?
+                  {t("auth.forgot")}
                 </button>
               </div>
             )}
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? "Please wait..." : mode === "login" ? "Sign in" : mode === "register" ? "Create account" : "Send reset link"}
+              {loading
+                ? t("common.pleaseWait")
+                : mode === "login"
+                  ? t("auth.signinTitle")
+                  : mode === "register"
+                    ? t("auth.createAccount")
+                    : t("auth.sendReset")}
             </Button>
           </form>
         )}
@@ -140,24 +167,24 @@ export function Auth({ onAuthenticated }: AuthProps) {
           <p className="text-sm text-muted-foreground">
             {mode === "login" ? (
               <>
-                Don&apos;t have an account?{" "}
+                {t("auth.noAccount")}{" "}
                 <button
                   type="button"
                   className="font-medium text-foreground underline-offset-4 hover:underline"
                   onClick={() => { setMode("register"); setError("") }}
                 >
-                  Register
+                  {t("auth.register")}
                 </button>
               </>
             ) : (
               <>
-                Already have an account?{" "}
+                {t("auth.haveAccount")}{" "}
                 <button
                   type="button"
                   className="font-medium text-foreground underline-offset-4 hover:underline"
                   onClick={() => { setMode("login"); setError("") }}
                 >
-                  Login
+                  {t("auth.login")}
                 </button>
               </>
             )}

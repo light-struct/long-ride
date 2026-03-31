@@ -1,0 +1,157 @@
+{
+  "title": { "ru": "Ремонт велосипеда", "en": "Bike Repair Guides" },
+  "description": { "ru": "Пошаговые офлайн-инструкции для частых проблем.", "en": "Step-by-step offline instructions for common issues." },
+  "categories": [
+    {
+      "id": "brakes",
+      "name": { "ru": "Тормоза", "en": "Brakes" },
+      "topics": [
+        {
+          "id": "squeaking-brakes",
+          "title": { "ru": "Скрипят тормоза", "en": "Squeaking Brakes" },
+          "summary": { "ru": "Убрать шум и вернуть стабильное торможение.", "en": "Reduce noise and restore consistent braking." },
+          "badges": ["Easy"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаги", "en": "Steps" },
+              "kind": "ol",
+              "items": [
+                { "ru": "Очистите колодки изопропиловым спиртом и чистой тряпкой.", "en": "Clean brake pads with isopropyl alcohol and a clean rag." },
+                { "ru": "Проверьте выравнивание колодок: они должны равномерно касаться обода и не задевать покрышку.", "en": "Check pad alignment. They should hit the rim evenly and not touch the tire." },
+                { "ru": "Сделайте легкий toe-in: передняя часть колодки должна касаться обода чуть раньше задней.", "en": "Toe-in the pads slightly: the front of the pad should contact the rim first." },
+                { "ru": "Если скрип остается, слегка прошлифуйте колодки мелкой наждачкой, чтобы снять «глянец».", "en": "If squeaking persists, lightly sand the pads with fine sandpaper to remove glazing." },
+                { "ru": "Очистите тормозную поверхность обода обезжиривателем.", "en": "Clean the rim braking surface with degreaser." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "weak-braking-power",
+          "title": { "ru": "Слабое торможение", "en": "Weak Braking Power" },
+          "summary": { "ru": "Улучшить эффективность и чувство тормоза.", "en": "Improve braking feel and stopping distance." },
+          "badges": ["Medium"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаги", "en": "Steps" },
+              "kind": "ol",
+              "items": [
+                { "ru": "Проверьте износ колодок. Замените, если износ ниже метки/индикатора.", "en": "Check brake pad wear. Replace if worn past the indicator line." },
+                { "ru": "Осмотрите тросы на бахрому и ржавчину. При повреждениях замените.", "en": "Inspect cables for fraying or rust. Replace if damaged." },
+                { "ru": "Подкрутите барашек (barrel adjuster), чтобы увеличить натяжение троса.", "en": "Adjust the barrel adjuster to increase cable tension." },
+                { "ru": "Проверьте затяжку и центровку тормоза/калипера.", "en": "Check caliper bolt tightness and alignment." },
+                { "ru": "Убедитесь, что ручка тормоза прожимается корректно и трос правильно установлен.", "en": "Ensure the brake lever is engaging fully and the cable is properly seated." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "drivetrain",
+      "name": { "ru": "Трансмиссия", "en": "Drivetrain" },
+      "topics": [
+        {
+          "id": "chain-skipping",
+          "title": { "ru": "Проскакивает цепь", "en": "Chain Skipping" },
+          "summary": { "ru": "Исправить срывы/пропуски под нагрузкой.", "en": "Fix missed shifts and chain slips under load." },
+          "badges": ["Medium"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаги", "en": "Steps" },
+              "kind": "ol",
+              "items": [
+                { "ru": "Проверьте износ цепи измерителем. Замените при растяжении более 0.75%.", "en": "Check chain wear with a chain checker. Replace if stretched beyond 0.75%." },
+                { "ru": "Осмотрите звезды кассеты на «акулий плавник» (сильно сточенные зубья).", "en": "Inspect cassette teeth for a shark-fin wear pattern." },
+                { "ru": "Очистите и смажьте цепь.", "en": "Clean and lubricate the chain." },
+                { "ru": "Проверьте длину цепи и натяжение заднего переключателя.", "en": "Verify chain length and rear derailleur tension." },
+                { "ru": "Проверьте ровность петуха (для велосипедов с передачами).", "en": "Check that the derailleur hanger is straight (for geared bikes)." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "noisy-chain",
+          "title": { "ru": "Шумная цепь", "en": "Noisy Chain" },
+          "summary": { "ru": "Быстро убрать шум от сухой или грязной цепи.", "en": "Silence a dry or contaminated chain quickly." },
+          "badges": ["Easy"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаги", "en": "Steps" },
+              "kind": "ol",
+              "items": [
+                { "ru": "Тщательно очистите цепь обезжиривателем и щеткой.", "en": "Clean the chain thoroughly with degreaser and a brush." },
+                { "ru": "Полностью вытрите цепь насухо чистой тряпкой.", "en": "Wipe the chain completely dry with a clean rag." },
+                { "ru": "Нанесите смазку на каждое звено, вращая педали назад.", "en": "Apply chain lubricant to each link while rotating the pedals backward." },
+                { "ru": "Дайте смазке впитаться 5 минут.", "en": "Let the lubricant penetrate for 5 minutes." },
+                { "ru": "Сотрите излишки. Цепь должна быть почти сухой на ощупь.", "en": "Wipe off excess lubricant. The chain should feel almost dry to the touch." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "creaking-bottom-bracket",
+          "title": { "ru": "Скрип каретки", "en": "Creaking Bottom Bracket" },
+          "summary": { "ru": "Устранить частые скрипы при педалировании.", "en": "Address common creaks that appear under load." },
+          "badges": ["Hard"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаги", "en": "Steps" },
+              "kind": "ol",
+              "items": [
+                { "ru": "Снимите шатуны подходящим инструментом.", "en": "Remove both crank arms using the appropriate tool." },
+                { "ru": "Снимите каретку инструментом под ваш стандарт.", "en": "Remove the bottom bracket using the correct tool for your BB type." },
+                { "ru": "Очистите резьбу/посадки в кареточном стакане и нанесите свежую смазку.", "en": "Clean BB shell threads and apply fresh grease." },
+                { "ru": "Проверьте подшипники на люфт и шероховатость. При необходимости замените.", "en": "Inspect bearings for wear or roughness. Replace if necessary." },
+                { "ru": "Установите каретку с правильным моментом затяжки, затем установите шатуны.", "en": "Reinstall the BB to the correct torque specs, then reinstall the cranks." }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "wheels",
+      "name": { "ru": "Колеса", "en": "Wheels" },
+      "topics": [
+        {
+          "id": "flat-tire",
+          "title": { "ru": "Прокол", "en": "Flat Tire" },
+          "summary": { "ru": "Заклеить или заменить камеру и продолжить путь.", "en": "Patch or replace a tube and get rolling again." },
+          "badges": ["Easy"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаги", "en": "Steps" },
+              "kind": "ol",
+              "items": [
+                { "ru": "Снимите колесо и полностью спустите шину.", "en": "Remove the wheel and deflate the tire completely." },
+                { "ru": "Снимите один борт покрышки монтажками.", "en": "Use tire levers to unseat one bead from the rim." },
+                { "ru": "Достаньте камеру и найдите прокол (на слух/ощупь или с водой).", "en": "Remove the tube and locate the puncture (listen/feel or use water)." },
+                { "ru": "Заклейте камеру или поставьте новую. Слегка подкачайте, чтобы придать форму.", "en": "Patch the tube or install a new one. Slightly inflate to give it shape." },
+                { "ru": "Аккуратно посадите борт покрышки (не прищемите камеру) и накачайте до рекомендованного давления.", "en": "Reseat the tire bead carefully (avoid pinching), then inflate to the recommended PSI." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "wheel-out-of-true",
+          "title": { "ru": "Восьмерка", "en": "Wheel Out of True" },
+          "summary": { "ru": "Уменьшить биение обода в экстренной ситуации.", "en": "Reduce a side-to-side wobble in an emergency." },
+          "badges": ["Hard"],
+          "sections": [
+            {
+              "heading": { "ru": "Шаги", "en": "Steps" },
+              "kind": "ol",
+              "items": [
+                { "ru": "Установите колесо в станок или переверните велосипед вверх колесами.", "en": "Mount the wheel in a truing stand, or flip the bike upside down." },
+                { "ru": "Прокрутите колесо и найдите участок, где обод уходит влево/вправо.", "en": "Spin the wheel and identify where the rim wobbles left or right." },
+                { "ru": "Подтяните спицы с противоположной стороны биения и слегка ослабьте с той же стороны.", "en": "Tighten spokes on the opposite side of the wobble and loosen on the same side." },
+                { "ru": "Крутите ниппеля только на четверть оборота и проверяйте после каждого шага.", "en": "Make quarter-turn adjustments only, then recheck after each adjustment." },
+                { "ru": "Следите за равномерным натяжением; для снятия напряжений сожмите спицы попарно.", "en": "Ensure spoke tension is even and stress-relieve spokes by squeezing pairs together." }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

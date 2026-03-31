@@ -6,17 +6,27 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Separator } from "@/components/ui/separator"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { RefreshCw, User, Moon, Sun, LogOut, CheckCircle2, Database, Cloud, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { apiSync, tokenStore } from "@/lib/api"
 import { getUserNamespace, loadActiveBikeId, loadBikes, pushActivity, saveActiveBikeId, saveBikes } from "@/lib/local-state"
 import { apiToLocal, localToApi } from "@/lib/sync-adapter"
+import { useI18n } from "@/components/i18n/language-provider"
+import type { Lang } from "@/lib/i18n/types"
 
 interface SettingsProps {
   onLogout: () => void
 }
 
 export function Settings({ onLogout }: SettingsProps) {
+  const { lang, setLang, t } = useI18n()
   const [darkMode, setDarkMode] = React.useState(false)
   const [syncing, setSyncing] = React.useState(false)
   const [lastSynced, setLastSynced] = React.useState<string | null>(null)
@@ -56,7 +66,7 @@ export function Settings({ onLogout }: SettingsProps) {
       pushActivity("Manual sync completed")
       setTimeout(() => setJustSynced(false), 3000)
     } catch {
-      setSyncError("Sync failed. Check your connection.")
+      setSyncError(t("settings.syncFailed"))
     } finally {
       setSyncing(false)
     }
@@ -79,8 +89,8 @@ export function Settings({ onLogout }: SettingsProps) {
   return (
     <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Settings</h1>
-        <p className="text-sm text-muted-foreground">Account and preferences</p>
+        <h1 className="text-2xl font-semibold tracking-tight">{t("settings.title")}</h1>
+        <p className="text-sm text-muted-foreground">{t("settings.subtitle")}</p>
       </div>
 
       {/* Profile */}
@@ -90,7 +100,7 @@ export function Settings({ onLogout }: SettingsProps) {
             <User className="size-5" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-medium">My Account</p>
+            <p className="font-medium">{t("settings.myAccount")}</p>
             <p className="text-sm text-muted-foreground truncate">{userEmail}</p>
           </div>
         </CardContent>
@@ -98,15 +108,28 @@ export function Settings({ onLogout }: SettingsProps) {
 
       {/* Appearance */}
       <div className="space-y-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Appearance</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{t("settings.appearance")}</p>
         <Card>
-          <CardContent className="py-5">
+          <CardContent className="space-y-4 py-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 {darkMode ? <Moon className="size-4 text-muted-foreground" /> : <Sun className="size-4 text-muted-foreground" />}
-                <Label htmlFor="dark-mode" className="cursor-pointer text-sm font-medium">Dark Mode</Label>
+                <Label htmlFor="dark-mode" className="cursor-pointer text-sm font-medium">{t("settings.darkMode")}</Label>
               </div>
               <Switch id="dark-mode" checked={darkMode} onCheckedChange={handleThemeToggle} />
+            </div>
+
+            <div className="flex items-center justify-between gap-4">
+              <Label className="text-sm font-medium">{t("settings.language")}</Label>
+              <Select value={lang} onValueChange={(v) => setLang(v as Lang)}>
+                <SelectTrigger className="w-[170px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="ru">{t("lang.ru")}</SelectItem>
+                  <SelectItem value="en">{t("lang.en")}</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </CardContent>
         </Card>
@@ -114,7 +137,7 @@ export function Settings({ onLogout }: SettingsProps) {
 
       {/* Sync Engine */}
       <div className="space-y-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Sync Engine</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{t("settings.syncEngine")}</p>
         <Card>
           <CardContent className="space-y-5 py-5">
             <div className="flex items-center gap-3">
@@ -122,8 +145,8 @@ export function Settings({ onLogout }: SettingsProps) {
                 <Database className="size-5" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium">Local Database (SQLite)</p>
-                <p className="text-xs text-muted-foreground">Healthy</p>
+                <p className="text-sm font-medium">{t("settings.localDb")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.healthy")}</p>
               </div>
               <div className="size-2.5 rounded-full bg-[#10B981]" />
             </div>
@@ -135,8 +158,8 @@ export function Settings({ onLogout }: SettingsProps) {
                 <Cloud className="size-5" />
               </div>
               <div className="flex-1">
-                <p className="text-sm font-medium">Cloud Sync (PostgreSQL)</p>
-                <p className="text-xs text-muted-foreground">Connected</p>
+                <p className="text-sm font-medium">{t("settings.cloudSync")}</p>
+                <p className="text-xs text-muted-foreground">{t("settings.connected")}</p>
               </div>
               <div className="size-2.5 rounded-full bg-[#10B981]" />
             </div>
@@ -145,10 +168,10 @@ export function Settings({ onLogout }: SettingsProps) {
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium">Last Sync</p>
+                <p className="text-sm font-medium">{t("settings.lastSync")}</p>
                 <p className="text-xs text-muted-foreground">
                   <span className={cn(justSynced && "text-[#10B981] font-medium")}>
-                    {lastSynced ?? "Never synced"}
+                    {lastSynced ?? t("settings.neverSynced")}
                   </span>
                 </p>
               </div>
@@ -163,12 +186,12 @@ export function Settings({ onLogout }: SettingsProps) {
             )}
 
             <p className="text-xs text-muted-foreground leading-relaxed">
-              LongRide uses differential sync — only changed data is transferred, keeping the app fast and working offline.
+              {t("settings.syncHint")}
             </p>
 
             <Button className="w-full gap-2" onClick={handleSync} disabled={syncing}>
               <RefreshCw className={cn("size-4", syncing && "animate-spin")} />
-              {syncing ? "Syncing..." : "FORCE SYNC"}
+              {syncing ? t("settings.syncing") : t("settings.forceSync")}
             </Button>
           </CardContent>
         </Card>
@@ -176,7 +199,7 @@ export function Settings({ onLogout }: SettingsProps) {
 
       {/* Logout */}
       <div className="space-y-3">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">Account</p>
+        <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground">{t("settings.account")}</p>
         <Card>
           <CardContent className="py-4">
             <Button
@@ -185,7 +208,7 @@ export function Settings({ onLogout }: SettingsProps) {
               onClick={handleLogout}
             >
               <LogOut className="size-4" />
-              Sign out
+              {t("settings.signOut")}
             </Button>
           </CardContent>
         </Card>
